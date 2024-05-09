@@ -70,7 +70,7 @@ class GUI(customtkinter.CTk):
     
     def main_widgets(self):
 
-        global progress_bar
+        #global progress_bar
 
         self.download_btn = customtkinter.CTkButton(self,text="Download video",
                                                     fg_color="red",
@@ -91,7 +91,7 @@ class GUI(customtkinter.CTk):
         self.entry = customtkinter.CTkEntry(self,placeholder_text="Paste you're URL here",font=("Helvetica",20),width=300,height=50)
 
         #self.progress = customtkinter.CTkProgressBar(self,height=20,width=300)
-        progress_bar = self.progress 
+        #progress_bar = self.progress 
 
         self.entry.grid(row=0,column=0,sticky = "nw", padx=(50,0),pady=(150,0))
         self.paste_btn.grid(row=0,column=0,sticky = "nw",padx=(370,0),pady=(150,0))
