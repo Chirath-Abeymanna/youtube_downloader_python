@@ -1,0 +1,9 @@
+<RCC>
+  <qresource prefix="newPrefix">
+    <file>main_logo.jpg</file>
+    <file>download_complete.gif</file>
+    <file>logo_title.ico</file>
+    <file>arrow-204-32.ico</file>
+    <file>main_logo.svg</file>
+  </qresource>
+</RCC>

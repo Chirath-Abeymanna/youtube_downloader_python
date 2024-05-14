@@ -1,0 +1,328 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Dialog</class>
+ <widget class="QDialog" name="Dialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>513</width>
+    <height>285</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>second_window</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">background-color: rgb(16, 20, 24);
+border:1px solid rgb(158, 158, 158);
+border-radius: 10px;</string>
+  </property>
+  <widget class="QPushButton" name="download_btn">
+   <property name="geometry">
+    <rect>
+     <x>340</x>
+     <y>210</y>
+     <width>151</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Segoe UI</family>
+     <pointsize>15</pointsize>
+    </font>
+   </property>
+   <property name="cursor">
+    <cursorShape>PointingHandCursor</cursorShape>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QPushButton{
+	background:rgb(232, 0, 0);
+	border: 0px;
+	border-radius:  20px;
+	color:rgb(255, 255, 255);
+	
+}
+
+QPushButton:hover{
+	background:rgb(193, 0, 0);
+}
+</string>
+   </property>
+   <property name="text">
+    <string>Download</string>
+   </property>
+  </widget>
+  <widget class="QComboBox" name="resolution_box">
+   <property name="geometry">
+    <rect>
+     <x>250</x>
+     <y>110</y>
+     <width>161</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QComboBox{
+	background-color: rgb(16, 20, 24);
+	border:2px solid rgb(158, 158, 158);
+	border-radius:0px;
+	color:rgb(158, 158, 158);
+	selection-background-color: rgb(158, 158, 158); 
+	font-size:20px;
+}
+
+QComboBox QAbstractItemView {
+        background-color: rgb(16, 20, 24);
+		border:2px solid rgb(158, 158, 158);
+		border-radius:0px;
+		color:rgb(158, 158, 158);
+		selection-background-color: rgb(158, 158, 158); 
+		font-size:20px;
+    }
+QComboBox: : drop-down{
+	border:1px solid;
+	
+}
+
+QComboBox: : down-arrow{
+		image: url(:/newPrefix/arrow-204-32.ico);
+		width: 20px;
+		height : 20px;
+		margin-right: 15px;
+}</string>
+   </property>
+   <property name="iconSize">
+    <size>
+     <width>15</width>
+     <height>15</height>
+    </size>
+   </property>
+   <item>
+    <property name="text">
+     <string>mp3/audio</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>360p/video</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>480p/video</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>720p/video</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>1080p/video</string>
+    </property>
+   </item>
+   <item>
+    <property name="text">
+     <string>highest/video</string>
+    </property>
+   </item>
+  </widget>
+  <widget class="QFrame" name="titleBar1">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>511</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QFrame{
+	
+	background-color: rgb(37, 46, 54);
+	border: 0px;
+	border-radius: 0px;
+}</string>
+   </property>
+   <property name="frameShape">
+    <enum>QFrame::StyledPanel</enum>
+   </property>
+   <property name="frameShadow">
+    <enum>QFrame::Raised</enum>
+   </property>
+   <widget class="QPushButton" name="closeButton">
+    <property name="geometry">
+     <rect>
+      <x>450</x>
+      <y>0</y>
+      <width>61</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+		background-color: rgb(37, 46, 54);
+		border: 10px;
+		border-radius: 0px;
+		
+}
+
+QPushButton:hover{
+	background:rgb(244, 67, 54);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../resources/close.png</normaloff>../resources/close.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="minimizeButton">
+    <property name="geometry">
+     <rect>
+      <x>400</x>
+      <y>0</y>
+      <width>51</width>
+      <height>60</height>
+     </rect>
+    </property>
+    <property name="cursor">
+     <cursorShape>PointingHandCursor</cursorShape>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton{
+	
+	background-color: rgb(37, 46, 54);
+	border: 1px;
+	border-radius: 0px;
+}
+
+QPushButton:hover{
+	background:rgb(44, 55, 67);
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../resources/minimize.png</normaloff>../resources/minimize.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>32</width>
+      <height>32</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>31</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	border: 0px solid;
+}</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="pixmap">
+     <pixmap>../resources/logo_title.png</pixmap>
+    </property>
+    <property name="scaledContents">
+     <bool>true</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>50</x>
+      <y>25</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLabel{
+	color: white;
+	font-family: ADLaM Display;
+	font-size: 15px;
+	
+
+}</string>
+    </property>
+    <property name="text">
+     <string>Youtube video downloader</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>60</y>
+     <width>511</width>
+     <height>1</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">Line{
+	border: 0px;
+	background-color:  rgb(158, 158, 158);
+}</string>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>120</y>
+     <width>191</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">QLabel{
+	border: 0px solid;
+	color: white;
+	font-family: Times new Roman;
+	font-size: 20px;
+}</string>
+   </property>
+   <property name="text">
+    <string>Select you're format:</string>
+   </property>
+  </widget>
+ </widget>
+ <resources>
+  <include location="../resource.qrc"/>
+  <include location="../resources/resource.qrc"/>
+ </resources>
+ <connections/>
+</ui>
