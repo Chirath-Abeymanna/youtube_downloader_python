@@ -2,7 +2,8 @@
 
 import sys 
 import os
-from pathlib import Path
+import shutil
+import re
 
 #NOTE: Below libraries should be downloaded if not already
 #NOTE: pyperclip,PyQt5,pytube
@@ -16,8 +17,14 @@ import pyperclip
 
 from contents import video_converter
 
- #changing the working directory
-working_directory = Path(__file__).absolute().parent
+#Creating a resourcepath function
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS2
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
 
 #Function to paste the copied url
 def url_paste(widget):
@@ -29,7 +36,7 @@ def url_paste(widget):
 class WorkerSignals(QObject):
 
     finished = pyqtSignal()
-    streams_found = pyqtSignal(object,object)
+    streams_found = pyqtSignal(object,object,object,object)
     update_signal = pyqtSignal()
 
 #Thread pool class to show gif
@@ -57,8 +64,8 @@ class Worker(QRunnable):
     def run(self):
         result = self.fun(*self.args, **self.kwargs)
         if result is not None:
-            yt, streams = result
-            self.signals.streams_found.emit(yt, streams)
+            yt, streams,stream_audio,status = result
+            self.signals.streams_found.emit(yt, streams,stream_audio,status)
         self.signals.finished.emit()
 
 #Downloading video function
@@ -68,115 +75,155 @@ def download_video_func(entry,options,window,main_window):
 
             main_window.progress_label.clear()
             
-            print("\n---------Download status-------------------")
-            print("Selected URL: ",entry.text())
-            print("Selected format: ", options.currentText())
-
-            id = 0
       
             folder =  QFileDialog.getExistingDirectory(window, "Save Location", "", QFileDialog.ShowDirsOnly)
             url = entry.text()
 
-            #Create a global threadpool
-            thread_pool = QThreadPool.globalInstance()
-            
-            # Start loading animation
-            signal_emitter = WorkerSignals()
-            signal_emitter.update_signal.connect(main_window.loading_animation)
-    
-            worker2 = WorkerAnimation(signal_emitter)
-            thread_pool.start(worker2)
+            if folder:
 
-            if options.currentText() == "mp3/audio":
+                print("\n---------Download status-------------------")
+                print("Selected URL: ",entry.text())
+                print("Selected format: ", options.currentText())
 
-                worker_audio = Worker(finding_streams,options, url, main_window)
-                thread_pool.start(worker_audio)  # Submit the worker to the thread pool
-                id = 1
+                #Create a global threadpool
+                thread_pool = QThreadPool.globalInstance()
+                
+                # Start loading animation
+                signal_emitter = WorkerSignals()
+                signal_emitter.update_signal.connect(main_window.loading_animation)
+        
+                worker2 = WorkerAnimation(signal_emitter)
+                thread_pool.start(worker2)
 
-                # Get the global QThreadPool instance
-                worker_audio.signals.streams_found.connect(lambda yt,streams: handle_streams_found(yt,streams,folder,window,main_window,thread_pool,id))
-            
-            else:
-                # Create an instance of Worker with download_video function and its arguments
                 worker = Worker(finding_streams,options, url, main_window)
-
                 thread_pool.start(worker)  # Submit the worker to the thread pool
-
+                
                 # Get the global QThreadPool instance
-                worker.signals.streams_found.connect(lambda yt,streams: handle_streams_found(yt,streams,folder,window,main_window,thread_pool,id))
+                worker.signals.streams_found.connect(lambda yt,streams,stream_audio,status: handle_streams_found(yt,streams,stream_audio,status,folder,window,main_window,thread_pool))
 
-            window.close()
+                window.close()
+
+            else:
+                window.close()
 
         except Exception as e:
             print("lamba error",e)
-            main_window.show_error_message(str(e))
+            error(e,main_window,thread_pool)
             window.close()
 
 def finding_streams(options,url,main_window):
 
-    try:
             yt =YouTube(url)
+            stream_audio = 0
+            status = None
+
             resolution = options.currentText()
             split_resolution = resolution.split("/")
             print("Youtube video title: ",yt.title)
-            try:
 
-                if split_resolution[0] == "highest":
+            if split_resolution[0] == "highest":
                     streams = yt.streams.filter(progressive=True,file_extension="mp4").get_highest_resolution()
+                    status = "proceed"
                 
-                elif split_resolution[0] == "mp3":
+            elif split_resolution[0] == "mp3":
                     streams = yt.streams.filter(only_audio=True).first()
+                    status = "audio"
                 
-                else:
+            else:
                     streams = yt.streams.filter(res=f"{split_resolution[0]}",file_extension="mp4").first()
-                
-                return yt,streams
 
-            except Exception as e:
-                print(e)
-                main_window.show_error_message(str(e))
+                    if 'progressive="True"' in str(streams):                                        
+                        status = "proceed"
+                        return yt,streams,stream_audio,status
+                    else:
+                        status = "join"
+                        stream_audio = yt.streams.filter(only_audio=True).first()
+                        return yt,streams,stream_audio,status
                 
-    except Exception as e:
-        print(e)
-        main_window.show_error_message(str(e))
+            return yt,streams,stream_audio,status
+                
 
 #Changing animations when the stream being found
-def handle_streams_found(yt,streams,folder,window,main_window,thread_pool,id):
+def handle_streams_found(yt,streams,stream_audio,status,folder,window,main_window,thread_pool):
 
     print("Choosed stream:",streams)
 
     downloading_animation(main_window,thread_pool)
 
-    if id == 1:
+    if status == "audio":
 
         # Create an instance of Worker with download_video function and its arguments
         worker = Worker(download_audio,yt,streams,folder,main_window,thread_pool)
+    
+    elif status == "join":
+         
+        # Create an instance of Worker with download_video function and its arguments
+        worker = Worker(join_video_and_download,yt,streams,stream_audio,folder,main_window,thread_pool)
+
     else:
         # Create an instance of Worker with download_video function and its arguments
-        worker = Worker(download_video,streams,folder,main_window)
+        worker = Worker(download_video,streams,folder,main_window,thread_pool)
 
     thread_pool.start(worker)  # Submit the worker to the thread pool
     worker.signals.finished.connect(lambda: download_complete(main_window,thread_pool))
 
 
+def join_video_and_download(yt,streams,stream_audio,folder,main_window,thread_pool):
+     
+    try: 
+        print(stream_audio)
+
+        title = re.sub(r'[|\\/?*]', '_', yt.title)
+
+        path = (resource_path("resources"))
+        audio_path = (resource_path("resources\ audio"))
+        video = streams.download(output_path=path)
+        if video:
+            audio = stream_audio.download(output_path=audio_path) 
+            if audio:     
+                print("Audio: ",audio)
+                print("Video: ",video)
+                if "/" in folder:
+                    back_slash = "/"
+                    output_name = f"{folder+back_slash+title}.mp4"
+                else:
+                    forward_slash = "\ "
+                    output_name = f"{folder+forward_slash+title}.mp4"
+                print(output_name)
+                video_converter.video_joiner(video,audio,output_name) 
+                shutil.rmtree(audio_path)
+                os.remove(video)
+    
+    except Exception as e:
+        print(e)
+        error(e,main_window,thread_pool)
+     
+
 def download_audio(yt,audio,folder,main_window,thread_pool):
 
     try: 
 
-        path = (working_directory/"resources")
+        title = re.sub(r'[|\\/?*]', '_', yt.title)
+
+        path = (resource_path("resources"))
         download = audio.download(output_path=path)
         print(download)
-        back_slash = "/"
-        output_name = f"{folder+back_slash+yt.title}.mp3"
+        
+        if "/" in folder:
+            back_slash = "/"
+            output_name = f"{folder+back_slash+title}.mp3"
+        else:
+            forward_slash = "\ "
+            output_name = f"{folder+forward_slash+title}.mp3"
         print(output_name)
         video_converter.convert_to_mp3(download,output_name) 
         os.remove(download)
     
     except Exception as e:
-        main_window.show_error_message(str(e))
+        error(e,main_window,thread_pool)
 
 
-def download_video(streams,folder,main_window):
+def download_video(streams,folder,main_window,thread_pool):
             try:
                 print ("Starting download ....")
                 streams.download(output_path=folder)
@@ -184,20 +231,7 @@ def download_video(streams,folder,main_window):
                     
             except Exception as e:
                 print(e)
-                main_window.show_error_message(str(e))
-
-
-def stop_loading(main_window,thread_pool):
-
-    # Stop loading status gif and start downloading gif         
-    signal_emitter = WorkerSignals()
-    signal_emitter.update_signal.connect(lambda: download_complete(main_window,thread_pool))
-
-    worker2 = WorkerAnimation(signal_emitter)
-    thread_pool.start(worker2)
-
-    main_window.show_info_message()
-
+                error(e,main_window,thread_pool)
 
 def downloading_animation(main_window,thread_pool):
         
@@ -210,19 +244,29 @@ def downloading_animation(main_window,thread_pool):
     worker = WorkerAnimation(signal_emitter)
     thread_pool.start(worker)
 
-
 def download_complete(main_window,thread_pool):
 
-    main_window.progress_label.clear()
+    try:
 
-    # Start loading animation
-    signal_emitter = WorkerSignals()
-    signal_emitter.update_signal.connect(main_window.download_complete)
+        main_window.progress_label.clear()
+
+        # Start loading animation
+        signal_emitter = WorkerSignals()
+        signal_emitter.update_signal.connect(main_window.download_complete)
+        
+        worker = WorkerAnimation(signal_emitter)
+        thread_pool.start(worker)
+
+        worker.signals.finished.connect(main_window.show_info_message)
     
-    worker = WorkerAnimation(signal_emitter)
-    thread_pool.start(worker)
+    except Exception as e:
+        print(e)
+        error(e,main_window,thread_pool)
 
-    worker.signals.finished.connect(main_window.show_info_message)
+def error(e,main_window,thread_pool):
+
+    error = Worker(main_window.show_error_message,e)
+    thread_pool.start(error)
 
 class GUI(QMainWindow):
     def __init__(self):
@@ -232,7 +276,8 @@ class GUI(QMainWindow):
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
         #Loading GUI
-        uic.loadUi( working_directory /"design/main_window.ui",self)
+        uic.loadUi( resource_path("design\main_window.ui"),self)
+        self.setFixedSize(1089,729)
 
         #getting the widgets
         self.main_window()
@@ -276,7 +321,7 @@ class GUI(QMainWindow):
                 # Check if second_window is already created
                 if not self.second_window:
                     # Load the second window from the .ui file
-                    self.second_window = loadUi(working_directory/"design/second_window.ui")
+                    self.second_window = loadUi(resource_path("design\second_window.ui"))
 
                     self.second_window.setWindowFlag(Qt.WindowType.FramelessWindowHint)
 
@@ -310,6 +355,12 @@ class GUI(QMainWindow):
 
         elif event.button() == Qt.LeftButton:
             self.offset = None
+            widget = self.childAt(event.pos())
+            if widget is self.title_bar:
+                self.draggable = True
+                self.offset = event.pos() - self.pos()
+            else:
+                self.draggable = False
 
         else:
             super().mousePressEvent(event)
@@ -334,7 +385,7 @@ class GUI(QMainWindow):
 
     def loading_animation(self):
         
-        self.loading_status = QtGui.QMovie("resources/loading.gif")
+        self.loading_status = QtGui.QMovie(resource_path("resources\loading.gif"))
         self.progress_label.setMovie(self.loading_status)
 
         # Align the movie to the center of the QLabel
@@ -348,7 +399,7 @@ class GUI(QMainWindow):
     
     def downloading_animation(self):
         
-        self.download_status = QtGui.QMovie("resources/download_start.gif")
+        self.download_status = QtGui.QMovie(resource_path("resources\download_start.gif"))
         self.progress_label.setMovie(self.download_status)
         self.download_status.start()
         if self.download_status.isValid():
@@ -357,7 +408,7 @@ class GUI(QMainWindow):
             print("downloading animation didn't load suceessfully")
 
     def download_complete(self):
-        self.complete_status = QtGui.QMovie("resources/download_complete.gif")
+        self.complete_status = QtGui.QMovie(resource_path("resources\download_complete.gif"))
         self.progress_label.setMovie(self.complete_status)
         self.complete_status.start()
         if self.complete_status.isValid():
