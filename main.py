@@ -32,6 +32,8 @@ def url_paste(widget):
     widget.clear()
     widget.setText(copied_url)
 
+    #deiojfwefoi
+
 #Creating objects to multithreading processes
 class WorkerSignals(QObject):
 
