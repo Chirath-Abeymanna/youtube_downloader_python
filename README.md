@@ -38,7 +38,7 @@ This application was created by Chamodya Chirath as a personal challenge and to 
 - pytube
 - ffmpeg
 
-#### NOTE - This application was made for educational purposes only. Also many of the youtube videos have copyright claims I'm NOT responsible for any kind of reselling of the videos that's been downloaded and I'm also not reccomending doing so. even though the use of application is completely free. Use this to download and enjoy you're favorite videos in youtube NOT for financial gain.
+> NOTE - This application was made for educational purposes only. Also many of the youtube videos have copyright claims I'm NOT responsible for any kind of reselling of the videos that's been downloaded and I'm also not reccomending doing so. even though the use of application is completely free. Use this to download and enjoy you're favorite videos in youtube NOT for financial gain.
 
 [Back To The Top](#Youtube-video-downloader)
 
@@ -61,7 +61,7 @@ Method 2
 
 You can use these methods to use the application in a windows operating system. Python install is not necessary in the insallation methods but it is needed if you're trying to run the file using "main.py" file
 
-#### WARNING - Not having a stable internet connection can cause unexpected errors
+> WARNING - Not having a stable internet connection can cause unexpected errors
 
 ## License
 
