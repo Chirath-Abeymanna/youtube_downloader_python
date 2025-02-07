@@ -4,24 +4,20 @@
 
 > An app to download you're favorite youtube videos and songs.
 
-
-
 ### Table of Contents
+
 ---
 
 - [Youtube video downloader](#youtube-video-downloader)
-    - [Table of Contents](#table-of-contents)
+  - [Table of Contents](#table-of-contents)
   - [Description](#description)
   - [Purpose for creation](#purpose-for-creation)
-      - [Technologies that used](#technologies-that-used)
-      - [NOTE - This application was made for educational purposes only. Also many of the youtube videos have copyright claims I'm NOT responsible for any kind of reselling of the videos that's been downloaded and I'm also not reccomending doing so. even though the use of application is completely free. Use this to download and enjoy you're favorite videos in youtube NOT for financial gain.](#note---this-application-was-made-for-educational-purposes-only-also-many-of-the-youtube-videos-have-copyright-claims-im-not-responsible-for-any-kind-of-reselling-of-the-videos-thats-been-downloaded-and-im-also-not-reccomending-doing-so-even-though-the-use-of-application-is-completely-free-use-this-to-download-and-enjoy-youre-favorite-videos-in-youtube-not-for-financial-gain)
+    - [Technologies that used](#technologies-that-used)
   - [How To Use](#how-to-use)
     - [Installation](#installation)
-      - [WARNING - Not having a stable internet connection can cause unexpected errors](#warning---not-having-a-stable-internet-connection-can-cause-unexpected-errors)
   - [License](#license)
   - [Screenshots](#screenshots)
   - [Author Info](#author-info)
-
 
 ## Description
 
@@ -42,22 +38,21 @@ This application was created by Chamodya Chirath as a personal challenge and to 
 
 [Back To The Top](#Youtube-video-downloader)
 
-
-
 ## How To Use
 
 - You can download the repository by clicking "code" and downloading zip file
 - After that you need to extract the zip file.
 - Then open the "main.py" file and run it make sure you're virtual environment is correct
 
-
 ### Installation
 
 Method 1
- - Go to the bin folder and run the youtubedownloader_V1.0.exe setup file
+
+- Go to the bin folder and run the youtubedownloader_V1.0.exe setup file
 
 Method 2
-  - If the first method doesn't work go to the bin folder and extract the "youtube_video_downloader.rar" file in to you're computer
+
+- If the first method doesn't work go to the bin folder and extract the "youtube_video_downloader.rar" file in to you're computer
 
 You can use these methods to use the application in a windows operating system. Python install is not necessary in the insallation methods but it is needed if you're trying to run the file using "main.py" file
 
@@ -89,21 +84,17 @@ SOFTWARE.
 
 [Back To The Top](#Youtube-video-downloader)
 
-
 ## Screenshots
- 
- ![Project Image](resources/1.png)
 
+![Project Image](resources/1.png)
 
- ![Project Image](resources/3.png)
+![Project Image](resources/3.png)
 
- ![Project Image](resources/4.png)
+![Project Image](resources/4.png)
 
- ![Project Image](resources/5.png)
+![Project Image](resources/5.png)
 
- ![Project Image](resources/6.png)
-
-
+![Project Image](resources/6.png)
 
 ## Author Info
 
